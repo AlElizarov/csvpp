@@ -1,0 +1,10 @@
+{
+  "name": "csvpp",
+  "version": "0.0.1",
+  "description": "Tool to work with .scv files",
+  "homepage": "https://github.com/AlElizarov/csvpp",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+  ]
+}
