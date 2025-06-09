@@ -5,6 +5,8 @@ project(csvpp
   DESCRIPTION "C++/Boost-based library for reading and writing CSV files"
   VERSION 1.0.1)
 
+set(CMAKE_CXX_STANDARD 20)
+
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
