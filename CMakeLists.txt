@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
 project(csvpp
   LANGUAGES CXX
@@ -20,8 +20,16 @@ file(GLOB_RECURSE src
 add_library(csvpp SHARED ${src})
 add_library(csvpp_static STATIC ${src})
 
-target_include_directories(csvpp PUBLIC src)
-target_include_directories(csvpp_static PUBLIC src)
+target_include_directories(csvpp PUBLIC  
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>  
+    $<INSTALL_INTERFACE:include>
+)
+target_include_directories(csvpp_static PUBLIC  
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>  
+    $<INSTALL_INTERFACE:include>
+)
+#target_include_directories(csvpp PUBLIC src)
+#target_include_directories(csvpp_static PUBLIC src)
 configure_file(csvpp.pc.in csvpp.pc @ONLY)
 
 configure_package_config_file(
@@ -33,7 +41,7 @@ configure_package_config_file(
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
-install(TARGETS csvpp
+install(TARGETS csvpp csvpp_static
         EXPORT csvpp-targets
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
