@@ -7,6 +7,10 @@ project(csvpp
 
 set(CMAKE_CXX_STANDARD 20)
 
+include(GNUInstallDirs)
+include(CheckIncludeFiles)
+include(CMakePackageConfigHelpers)
+
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -20,6 +24,29 @@ target_include_directories(csvpp PUBLIC src)
 target_include_directories(csvpp_static PUBLIC src)
 configure_file(csvpp.pc.in csvpp.pc @ONLY)
 
-install(TARGETS csvpp LIBRARY DESTINATION lib)
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/csvpp-config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/csvpp-config.cmake"
+  INSTALL_DESTINATION
+    "{CMAKE_INSTALL_LIBDIR}/cmake/csvpp"
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+install(TARGETS csvpp
+        EXPORT csvpp-targets
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+install(EXPORT csvpp-targets
+        NAMESPACE csvpp::
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/csvpp"
+        EXPORT_LINK_INTERFACE_LIBRARIES)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/csvpp-config.cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/csvpp")
+
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/csvpp.pc DESTINATION lib/pkgconfig)
 install(DIRECTORY src/csv DESTINATION include)
